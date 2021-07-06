@@ -47,6 +47,15 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Client
+
+```bash
+
+# query in browser / postman
+localhost:3000?name=xx
+
+```
+
 ## Test
 
 ```bash
@@ -73,3 +82,8 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
   Nest is [MIT licensed](LICENSE).
+
+
+ # 项目简介
+ ## how to setup?
+ read this [article(https://dev.to/lampewebdev/monorepo-and-microservice-setup-in-nest-js-41n4)](https://dev.to/lampewebdev/monorepo-and-microservice-setup-in-nest-js-41n4)
