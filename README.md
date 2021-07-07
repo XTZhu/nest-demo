@@ -87,3 +87,8 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
  # 项目简介
  ## how to setup?
  read this [article(https://dev.to/lampewebdev/monorepo-and-microservice-setup-in-nest-js-41n4)](https://dev.to/lampewebdev/monorepo-and-microservice-setup-in-nest-js-41n4)
+
+ ## bug
+ rabbit镜像不断重启
+ 
+ https://github.com/docker-library/rabbitmq/issues/171

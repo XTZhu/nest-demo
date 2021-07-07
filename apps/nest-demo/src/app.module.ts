@@ -8,9 +8,11 @@ import { AppService } from './app.service';
     ClientsModule.register([
       {
         name: 'NEST_SERVICE',
-        transport: Transport.TCP,
+        transport: Transport.RMQ, // can change to other
         options: {
-          port: 4000,
+          urls: ['amqp://admin:admin@localhost:5672'],
+          queue: 'cats_queue',
+          queueOptions: { durable: true },
         },
       },
     ]),

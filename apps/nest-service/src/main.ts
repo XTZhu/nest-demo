@@ -7,12 +7,16 @@ async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     NestServiceModule,
     {
-      transport: Transport.TCP, // can change to other
-      options: { port: 4000 },
+      transport: Transport.RMQ, // can change to other
+      options: {
+        urls: ['amqp://admin:admin@localhost:5672'],
+        queue: 'cats_queue',
+        queueOptions: { durable: true },
+      },
     },
   );
-  await app.listen(() => {
-    Logger.log(`nest service is listening at 4000`);
+  app.listen(() => {
+    Logger.log(`nest service is listening at 3000`);
   });
 }
 bootstrap();

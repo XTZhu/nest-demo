@@ -1,0 +1,16 @@
+version: '3.1'
+
+services:
+
+  rabbitmq:
+    image: rabbitmq:3.8.19-rc.1-management 
+    restart: always
+    ports: 
+      - 8080:15672
+      - 5672:5672
+    volumes:
+      - F:\docker\rabbitmq:/var/lib/rabbitmq/mnesia
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+  
