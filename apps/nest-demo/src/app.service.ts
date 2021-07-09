@@ -1,11 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class AppService {
-  constructor(@Inject('NEST_SERVICE') private readonly client: ClientProxy) {}
+  constructor(
+    @Inject('Cat_Demo')
+    private readonly serviceclient: ClientProxy,
+  ) {}
 
   getHello(name: string): Promise<string> {
-    return this.client.send<string>({ cmd: 'getHello' }, name).toPromise();
+    return lastValueFrom(
+      this.serviceclient.send<string>({ cmd: 'getHello' }, name),
+    );
   }
 }

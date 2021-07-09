@@ -1,19 +1,17 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { DataBaseModule } from 'libs/database/src';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 @Module({
   imports: [
+    DataBaseModule,
     ClientsModule.register([
       {
-        name: 'NEST_SERVICE',
-        transport: Transport.RMQ, // can change to other
-        options: {
-          urls: ['amqp://admin:admin@localhost:5672'],
-          queue: 'cats_queue',
-          queueOptions: { durable: true },
-        },
+        name: 'Cat_Demo',
+        transport: Transport.TCP,
+        options: { port: 5961 },
       },
     ]),
   ],
