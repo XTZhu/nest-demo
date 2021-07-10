@@ -2,7 +2,7 @@ import { Param, Put, Query, Redirect } from "@nestjs/common";
 import { Body, Controller, Delete, Get, Post } from "@nestjs/common";
 import { Observable, of } from "rxjs";
 import { CatsService } from "./cats.service";
-import { CreateCatDto, UpdateCatDto } from "./dtos/creat-cat.dto";
+import { CreateCatDto, UpdateCatDto } from "./dto/creat-cat.dto";
 import { Cat } from "./interfaces/cat.interface";
 
 
