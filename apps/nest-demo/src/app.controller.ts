@@ -2,7 +2,7 @@ import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 import { Body, Controller, Delete, Get, Header, HttpCode, Param, Post, Put, Query, Redirect } from '@nestjs/common';
 import { Observable, of } from 'rxjs';
 import { AppService } from './app.service';
-import { CreateCatDto, UpdateCatDto } from './dtos/creat-cat.dto';
+import { CreateCatDto, UpdateCatDto } from './cat/dtos/creat-cat.dto';
 
 @Controller('cats')
 // @Controller({ host: 'admin.example.com' })
@@ -91,6 +91,7 @@ export class AppController {
 
   @Put(':id')
   update(@Param('id') id: string, @Body() updateCatDto: UpdateCatDto): string {
+    console.log(updateCatDto);
     return `This action updates a #${id} cat`;
   }
 
