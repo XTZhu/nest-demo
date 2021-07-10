@@ -1,18 +1,39 @@
-import { Param, Put, Query, Redirect } from "@nestjs/common";
+import { HttpException, HttpStatus, Param, Put, Query, Redirect, UseFilters } from "@nestjs/common";
 import { Body, Controller, Delete, Get, Post } from "@nestjs/common";
 import { Observable, of } from "rxjs";
+import { ForbiddenException } from "../forbidden.exception";
+import { HttpExceptionFilter } from "../http-exception.filter";
 import { CatsService } from "./cats.service";
 import { CreateCatDto, UpdateCatDto } from "./dto/creat-cat.dto";
 import { Cat } from "./interfaces/cat.interface";
 
 
 @Controller('cats')
+// bad
+// @UseFilters(HttpExceptionFilter)
+// good
+@UseFilters(new HttpExceptionFilter())
 export class CatsController {
 	constructor(private readonly catsService: CatsService) { }
 
 	@Get()
+	// @UseFilters(HttpExceptionFilter)
 	findAll(): Cat[] {
-		return this.catsService.findAll();
+		// 正常响应
+		// return this.catsService.findAll();
+
+		// 简短的硬编码
+		// throw new HttpException(
+		// 	'This is a custom message', HttpStatus.FORBIDDEN);
+
+		// 自定义异常抛出
+		throw new ForbiddenException();
+
+		// 覆盖所有参数
+		// throw new HttpException({
+		// 	status: HttpStatus.FORBIDDEN,
+		// 	error: 'This is a custom message',
+		// }, HttpStatus.FORBIDDEN);
 	}
 
 	@Post()

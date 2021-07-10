@@ -18,4 +18,4 @@ import { DatabaseService } from './database.service';
   providers: [DatabaseService],
   exports: [DatabaseService, RabbitMQModule],
 })
-export class DataBaseModule {}
+export class DataBaseModule { }
