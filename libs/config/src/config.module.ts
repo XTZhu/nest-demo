@@ -1,23 +1,22 @@
-import { DynamicModule, Module } from '@nestjs/common';
-import { ConfigService } from './config.service';
-import { CONFIG_OPTIONS } from './constants';
+import {
+  ConfigModule as NestConfigModule,
+  ConfigService,
+} from '@nestjs/config';
+import { Module } from '@nestjs/common';
+
+export { ConfigService };
 
 @Module({
+  imports: [
+    NestConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['.env'],
+      cache: true,
+      // 自定义配置文件
+      load: [],
+    }),
+  ],
   providers: [ConfigService],
   exports: [ConfigService],
 })
-export class ConfigModule {
-  static register(options: { folder: string }): DynamicModule {
-    return {
-      module: ConfigModule,
-      providers: [
-        {
-          provide: CONFIG_OPTIONS,
-          useValue: options,
-        },
-        ConfigService,
-      ],
-      exports: [ConfigService],
-    };
-  }
-}
+export class ConfigModule {}

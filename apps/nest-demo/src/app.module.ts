@@ -18,8 +18,7 @@ import {
 
 @Module({
   imports: [
-    // ConfigModule,
-    ConfigModule.register({ folder: './config' }),
+    ConfigModule,
     DataBaseModule,
     ClientsModule.register([
       {

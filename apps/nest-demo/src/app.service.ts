@@ -10,8 +10,10 @@ export class AppService {
   ) {}
 
   getHello(name: string): Promise<string> {
+    const pattern = { cmd: 'getHello' };
+    const payload = name;
     return lastValueFrom(
-      this.serviceclient.send<string>({ cmd: 'getHello' }, name),
+      this.serviceclient.send<string>(pattern, payload),
     );
   }
 
