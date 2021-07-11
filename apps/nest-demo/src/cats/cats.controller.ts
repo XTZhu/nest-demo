@@ -5,6 +5,7 @@ import {
   Put,
   Query,
   Redirect,
+  SetMetadata,
   UseFilters,
   UseGuards,
   UsePipes,
@@ -20,8 +21,10 @@ import { CatsService } from './cats.service';
 import { CreateCatDto, UpdateCatDto } from './dto/creat-cat.dto';
 import { Cat } from './interfaces/cat.interface';
 import { ParseIntPipe } from '../common/pipe/parse-int.pipe';
+import { Roles } from '../common/decorators/roles.decorator';
 
 @Controller('cats')
+// 添加守卫
 @UseGuards(RolesGuard)
 // HIGH_LIGHT: 异常处理
 // bad
@@ -51,6 +54,22 @@ export class CatsController {
     // }, HttpStatus.FORBIDDEN);
   }
 
+  @Post()
+  // 守卫现在在正常工作，但还不是很智能。我们仍然没有利用最重要的守卫的特征，即执行上下文。
+  // 它还不知道角色，或者每个处理程序允许哪些角色。
+  // 例如，CatsController 可以为不同的路由提供不同的权限方案。
+  // 其中一些可能只对管理用户可用，而另一些则可以对所有人开放。
+  // 我们如何以灵活和可重用的方式将角色与路由匹配起来?
+
+  // 这就是自定义元数据发挥作用的地方。
+  // Nest提供了通过 @SetMetadata() 装饰器将定制元数据附加到路由处理程序的能力。
+  // 这些元数据提供了我们所缺少的角色数据，而守卫需要这些数据来做出决策。
+  // 让我们看看使用@SetMetadata():
+  // roles 是一个键，而 ['admin'] 是一个特定的值
+  // 直接使用 @SetMetadata() 并不是一个好习惯。 相反，你应该创建你自己的装饰器。
+  // @SetMetadata('roles', ['admin'])
+  @Roles('admin')
+
   // 我们要确保create方法能正确执行，所以必须验证 CreateCatDto 里的三个属性。
   // 我们可以在*路由处理程序方法*中做到这一点，但是我们会打破单个责任原则（SRP）。
   // 另一种方法是创建一个*验证器类*并在那里委托任务，但是不得不每次在方法开始的时候
@@ -59,11 +78,9 @@ export class CatsController {
   // (因为中间件不知道 execution context执行环境,也不知道要调用的函数和它的参数)。
 
   // 在这种情况下，你应该考虑使用管道。
-
-  @Post()
   // @UsePipes(new JoiValidationPipe(createCatSchema))
   // @UsePipes(new ValidationPipe()/ValidationPipe) 可选/或者参数范围（绑定@Body()）
-  create(@Body(new ValidationPipe()) createCatDto: CreateCatDto): void {
+  create(@Body(ValidationPipe) createCatDto: CreateCatDto): void {
     this.catsService.create(createCatDto);
   }
 
