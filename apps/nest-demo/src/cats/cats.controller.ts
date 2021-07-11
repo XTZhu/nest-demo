@@ -8,6 +8,7 @@ import {
   SetMetadata,
   UseFilters,
   UseGuards,
+  UseInterceptors,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -22,10 +23,14 @@ import { CreateCatDto, UpdateCatDto } from './dto/creat-cat.dto';
 import { Cat } from './interfaces/cat.interface';
 import { ParseIntPipe } from '../common/pipe/parse-int.pipe';
 import { Roles } from '../common/decorators/roles.decorator';
+import { LoggingInterceptor } from '../common/intercept/logging.interceptor';
+import { TransformInterceptor } from '../common/intercept/transform.interceptor';
 
 @Controller('cats')
+// 添加拦截器
+@UseInterceptors(LoggingInterceptor)
 // 添加守卫
-@UseGuards(RolesGuard)
+// @UseGuards(RolesGuard)
 // HIGH_LIGHT: 异常处理
 // bad
 // @UseFilters(HttpExceptionFilter)
@@ -79,12 +84,13 @@ export class CatsController {
 
   // 在这种情况下，你应该考虑使用管道。
   // @UsePipes(new JoiValidationPipe(createCatSchema))
-  // @UsePipes(new ValidationPipe()/ValidationPipe) 可选/或者参数范围（绑定@Body()）
+  // @UsePipes(new ValidationPipe()/ValidationPipe) 可选/或者参数范围（绑定@Body(ValidationPipe)）
   create(@Body(ValidationPipe) createCatDto: CreateCatDto): void {
     this.catsService.create(createCatDto);
   }
 
   @Get('all_cat')
+	@UseInterceptors(TransformInterceptor)
   findAllRxjs(): Observable<any[]> {
     return of(['a']);
   }
