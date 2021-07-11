@@ -10,16 +10,17 @@ import { AppService } from './app.service';
 //     return account;
 //   }
 export class AppController {
-
   constructor(
     private readonly appService: AppService,
     private readonly amqpConnection: AmqpConnection,
-  ) { }
+  ) {}
 
   @Get()
   async getHello(@Query('name') name: string): Promise<string> {
     const helloValue = await this.appService.getHello(name);
-    this.amqpConnection.publish('exchange1', 'soha.pub', { msg: 'hello world' });
+    this.amqpConnection.publish('exchange1', 'soha.pub', {
+      msg: 'hello world',
+    });
     return helloValue;
   }
 }

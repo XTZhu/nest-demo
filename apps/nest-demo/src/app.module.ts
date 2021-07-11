@@ -1,11 +1,19 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { DataBaseModule } from 'libs/database/src';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CatsController } from './cats/cats.controller';
 import { CatsModule } from './cats/cats.module';
-import { LoggerMiddleware, logger } from './common/middleware/logger.middleware';
+import {
+  LoggerMiddleware,
+  logger,
+} from './common/middleware/logger.middleware';
 
 @Module({
   imports: [
@@ -34,7 +42,7 @@ export class AppModule implements NestModule {
     // });
 
     consumer
-      // 单个 
+      // 单个
       // .apply(LoggerMiddleware)
 
       // 多个
@@ -44,7 +52,7 @@ export class AppModule implements NestModule {
         // { path: 'cats', method: RequestMethod.GET },
         // { path: 'cats', method: RequestMethod.POST },
         // 排除所有cats
-        'cats/(.*)'
+        'cats/(.*)',
       )
       .forRoutes(CatsController);
   }
