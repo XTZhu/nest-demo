@@ -92,3 +92,7 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
  rabbit镜像不断重启
  
  https://github.com/docker-library/rabbitmq/issues/171
+
+ ## 出现的库的地址
+
+ - [class-validator](https://github.com/typestack/class-validator#usage)

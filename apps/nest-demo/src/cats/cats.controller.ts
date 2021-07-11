@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Param, Put, Query, Redirect, UseFilters, UsePipes } from "@nestjs/common";
+import { HttpException, HttpStatus, Param, Put, Query, Redirect, UseFilters, UsePipes, ValidationPipe } from "@nestjs/common";
 import { Body, Controller, Delete, Get, Post } from "@nestjs/common";
 import { Observable, of } from "rxjs";
 import { ForbiddenException } from "../common/forbidden.exception";
@@ -7,6 +7,7 @@ import { JoiValidationPipe } from "../common/pipe/joi-validation.pipe";
 import { CatsService } from "./cats.service";
 import { CreateCatDto, UpdateCatDto } from "./dto/creat-cat.dto";
 import { Cat } from "./interfaces/cat.interface";
+import { ParseIntPipe } from "../common/pipe/parse-int.pipe";
 
 
 @Controller('cats')
@@ -49,7 +50,8 @@ export class CatsController {
 
 	@Post()
 	// @UsePipes(new JoiValidationPipe(createCatSchema))
-	create(@Body() createCatDto: CreateCatDto): void {
+	// @UsePipes(new ValidationPipe()/ValidationPipe) 可选/或者参数范围（绑定@Body()）
+	create(@Body(new ValidationPipe()) createCatDto: CreateCatDto): void {
 		this.catsService.create(createCatDto);
 	}
 
@@ -103,7 +105,7 @@ export class CatsController {
 	// 如果两个HTTP请求装饰器完全相同 那么只会执行(从上往下顺序)靠前的那个函数
 
 	@Get(':id')
-	findOneShort(@Param('id') id: string): string {
+	findOneShort(@Param('id', new ParseIntPipe()) id: string): string {
 		console.log('function findOneShort');
 		console.log(typeof id);
 		return `This action returns a #${id} cat.`;
