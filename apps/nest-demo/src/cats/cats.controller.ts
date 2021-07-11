@@ -36,6 +36,16 @@ export class CatsController {
 		// }, HttpStatus.FORBIDDEN);
 	}
 
+	// 我们要确保create方法能正确执行，所以必须验证 CreateCatDto 里的三个属性。
+	// 我们可以在*路由处理程序方法*中做到这一点，但是我们会打破单个责任原则（SRP）。
+	// 另一种方法是创建一个*验证器类*并在那里委托任务，但是不得不每次在方法开始的时候
+	// 我们都必须使用这个验证器。那么*验证中间件*呢？ 这可能是一个好主意，但我们不可能创建
+	// 一个整个应用程序通用的中间件
+	// (因为中间件不知道 execution context执行环境,也不知道要调用的函数和它的参数)。
+ 
+
+	// 在这种情况下，你应该考虑使用管道。
+
 	@Post()
 	create(@Body() createCatDto: CreateCatDto): void {
 		this.catsService.create(createCatDto);
