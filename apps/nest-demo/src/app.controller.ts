@@ -23,4 +23,10 @@ export class AppController {
     });
     return helloValue;
   }
+
+  @Get('all_user')
+  async getAllUser(): Promise<string> {
+    const helloValue = await this.appService.getAllUser();
+    return helloValue;
+  }
 }

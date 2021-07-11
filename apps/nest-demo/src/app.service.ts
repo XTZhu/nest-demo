@@ -14,4 +14,8 @@ export class AppService {
       this.serviceclient.send<string>({ cmd: 'getHello' }, name),
     );
   }
+
+  getAllUser(): Promise<string> {
+    return lastValueFrom(this.serviceclient.send<string>('findAllUsers', ''));
+  }
 }
