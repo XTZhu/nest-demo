@@ -6,7 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { DataBaseModule } from '@app/database';
 
 @Module({
-  imports: [UsersModule, AuthModule, DataBaseModule],
+  imports: [UsersModule, AuthModule],
   controllers: [NestServiceController],
   providers: [NestServiceService],
 })
