@@ -11,10 +11,11 @@ import { ParseIntPipe } from "../common/pipe/parse-int.pipe";
 
 
 @Controller('cats')
+// HIGH_LIGHT: 异常处理
 // bad
 // @UseFilters(HttpExceptionFilter)
 // good
-@UseFilters(new HttpExceptionFilter())
+// @UseFilters(new HttpExceptionFilter())
 export class CatsController {
 	constructor(private readonly catsService: CatsService) { }
 
