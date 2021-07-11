@@ -1,8 +1,9 @@
-import { HttpException, HttpStatus, Param, Put, Query, Redirect, UseFilters } from "@nestjs/common";
+import { HttpException, HttpStatus, Param, Put, Query, Redirect, UseFilters, UsePipes } from "@nestjs/common";
 import { Body, Controller, Delete, Get, Post } from "@nestjs/common";
 import { Observable, of } from "rxjs";
-import { ForbiddenException } from "../forbidden.exception";
-import { HttpExceptionFilter } from "../http-exception.filter";
+import { ForbiddenException } from "../common/forbidden.exception";
+import { HttpExceptionFilter } from "../common/filters/http-exception.filter";
+import { JoiValidationPipe } from "../common/pipe/joi-validation.pipe";
 import { CatsService } from "./cats.service";
 import { CreateCatDto, UpdateCatDto } from "./dto/creat-cat.dto";
 import { Cat } from "./interfaces/cat.interface";
@@ -47,6 +48,7 @@ export class CatsController {
 	// 在这种情况下，你应该考虑使用管道。
 
 	@Post()
+	// @UsePipes(new JoiValidationPipe(createCatSchema))
 	create(@Body() createCatDto: CreateCatDto): void {
 		this.catsService.create(createCatDto);
 	}
