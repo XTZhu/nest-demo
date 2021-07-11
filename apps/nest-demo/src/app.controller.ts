@@ -2,6 +2,7 @@ import { ConfigService } from '@app/config';
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 import { Controller, Get, Query } from '@nestjs/common';
 import { AppService } from './app.service';
+import { Message } from './message.event';
 
 @Controller()
 // @Controller({ host: 'admin.example.com' })
@@ -31,5 +32,11 @@ export class AppController {
     const helloValue = await this.appService.getAllUser();
     console.log(this.configService.get<string>('DB_HOST')); // localhost
     return helloValue;
+  }
+
+  @Get('get_hello')
+  getHelloMQ(): string {
+    this.amqpConnection.publish('exchange1', '*', new Message('hello bialal'));
+    return 'Hello world printed';
   }
 }

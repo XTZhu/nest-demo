@@ -1,3 +1,4 @@
+import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 import { Injectable } from '@nestjs/common';
 import { Cat } from './interfaces/cat.interface';
 
@@ -11,5 +12,13 @@ export class CatsService {
 
   findAll(): Cat[] {
     return this.cats;
+  }
+
+  @RabbitSubscribe({
+    exchange: 'exchange1',
+    routingKey: '*',
+  })
+  async pubSubHandler(msg: string): Promise<void> {
+    console.log(`Received message: ${msg}`);
   }
 }

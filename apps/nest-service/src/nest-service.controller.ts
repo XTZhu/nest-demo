@@ -10,4 +10,9 @@ export class NestServiceController {
   getHello(name: string): string {
     return this.nestServiceService.getHello(name);
   }
+
+  @MessagePattern({ cmd: 'message_printed' })
+  async handleMessagePrinted(data: Record<string, unknown>) {
+    console.log(data.text);
+  }
 }

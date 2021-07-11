@@ -13,7 +13,11 @@ export class NestServiceService {
     routingKey: 'soha.pub',
   })
   public async pubSubHandler(msg: string): Promise<void> {
-    console.log(`Received msg: ${msg}`);
-    Logger.log(`Received msg: ${msg}`);
+    try {
+      console.log(`Received msg: ${JSON.stringify(msg)}`);
+      Logger.log(`Received msg: ${JSON.stringify(msg)}`);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

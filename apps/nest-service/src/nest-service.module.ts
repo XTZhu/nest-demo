@@ -3,9 +3,10 @@ import { NestServiceController } from './nest-service.controller';
 import { NestServiceService } from './nest-service.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { DataBaseModule } from '@app/database';
 
 @Module({
-  imports: [UsersModule, AuthModule],
+  imports: [UsersModule, AuthModule, DataBaseModule],
   controllers: [NestServiceController],
   providers: [NestServiceService],
 })
