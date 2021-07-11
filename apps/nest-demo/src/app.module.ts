@@ -1,3 +1,4 @@
+import { DataBaseModule } from '@app/database';
 import {
   MiddlewareConsumer,
   Module,
@@ -5,7 +6,6 @@ import {
   RequestMethod,
 } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { DataBaseModule } from 'libs/database/src';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CatsController } from './cats/cats.controller';
