@@ -6,9 +6,7 @@ import { DatabaseService } from './database.service';
   imports: [
     RabbitMQModule.forRoot(RabbitMQModule, {
       exchanges: [
-        { name: 'LiveData', type: 'direct' },
-        { name: 'broadcast', type: 'fanout' },
-        { name: 'dead.letter.livedata', type: 'direct' },
+        { name: 'LiveData', type: 'fanout' },
       ],
       uri: 'amqp://admin:admin@localhost:5672',
       connectionInitOptions: { wait: false },

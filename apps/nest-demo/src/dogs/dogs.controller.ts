@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { DogsService } from './dogs.service';
 import { CreateDogDto } from './dto/create-dog.dto';
@@ -20,13 +21,13 @@ export class DogsController {
     return this.dogsService.create(createDogDto);
   }
 
-  @Get('test')
-  test(): void {
-    this.dogsService.test();
+  @Get('getMsg')
+  getMsg(@Query('msg') msg: string): void {
+    this.dogsService.getMsg(msg);
   }
 
   @Get('receiveMsg')
-  receiveMsg(): void{
+  receiveMsg(): void {
     this.dogsService.receiveMsg();
   }
 }

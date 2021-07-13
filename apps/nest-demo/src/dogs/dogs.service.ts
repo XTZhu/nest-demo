@@ -10,15 +10,15 @@ export class DogsService {
     return 'This action adds a new dog';
   }
 
-  test(): void {
+  getMsg(msg: string): void {
     const queue = 'hello';
-    const msg = 'Hello world';
+    const msgStr = msg || 'hello world';
 
     this.amqpConnection.channel.assertQueue(queue, {
       durable: false,
     });
 
-    this.amqpConnection.channel.sendToQueue(queue, Buffer.from(msg));
+    this.amqpConnection.channel.sendToQueue(queue, Buffer.from(msgStr));
     console.log(' [x] Sent %s', msg);
   }
 
@@ -28,14 +28,52 @@ export class DogsService {
       durable: false,
     });
 
+    this.amqpConnection.channel.prefetch(1, true);
+
     this.amqpConnection.channel.consume(
       queue,
       (msg: any) => {
+        const secs = msg.content.toString().split('.').length - 1;
         console.log(' [x] Received %s', msg.content.toString());
+        console.log(`work1-------${Date.now()}`);
+        setTimeout(() => {
+          this.amqpConnection.channel.ack(msg);
+          console.log(' [x] finished ');
+        }, secs * 1000);
       },
       {
-        noAck: true,
+        noAck: false,
+      },
+    );
+    this.amqpConnection.channel.consume(
+      queue,
+      (msg: any) => {
+        const secs = msg.content.toString().split('.').length - 1;
+        console.log(' [x] Received %s', msg.content.toString());
+        console.log(`work2-------${Date.now()}`);
+        setTimeout(() => {
+          this.amqpConnection.channel.ack(msg);
+          console.log(' [x] finished ');
+        }, secs * 1000);
+      },
+      {
+        noAck: false,
       },
     );
   }
+
+  // sendFanoutMsg(): void {
+  //   this.amqpConnection.channel.publish(
+  //     'liveData',
+  //     '',
+  //     Buffer.from('Hello world'),
+  //   );
+  // }
+
+  // receivedFanoutMsg(): void {
+  //   this.amqpConnection.channel.assertQueue('', {
+  //     exclusive: true,
+  //   });
+
+  // }
 }

@@ -194,22 +194,22 @@ export class AppService {
   // 给同一个队列下的officeHandler函数使用
   // 在messageTtl，过期后， 然后Nack() 会进入死信
   // 一个队列的expires必须相同
-  @RabbitSubscribe({
-    exchange: 'broadcast',
-    routingKey: 'hall',
-    queue: 'hall-queue',
-    queueOptions: {
-      messageTtl: 6000,
-      deadLetterExchange: 'dead.letter.livedata',
-      deadLetterRoutingKey: 'dead.letter.livedata.unformat',
-    },
-  })
-  public async hallHandler(payload: any) {
-    console.log(
-      `hall --${new Date().toISOString()}--> ${JSON.stringify(payload)}`,
-    );
-    return new Nack(true);
-  }
+  // @RabbitSubscribe({
+  //   exchange: 'broadcast',
+  //   routingKey: 'hall',
+  //   queue: 'hall-queue',
+  //   queueOptions: {
+  //     messageTtl: 6000,
+  //     deadLetterExchange: 'dead.letter.livedata',
+  //     deadLetterRoutingKey: 'dead.letter.livedata.unformat',
+  //   },
+  // })
+  // public async hallHandler(payload: any) {
+  //   console.log(
+  //     `hall --${new Date().toISOString()}--> ${JSON.stringify(payload)}`,
+  //   );
+  //   return new Nack(true);
+  // }
 
   // 订阅模式
   // 交换机模式为fanout 广播魔兽
@@ -220,21 +220,21 @@ export class AppService {
   // 未处理的消息officeHandler函数使用
   // 在messageTtl，过期后， 然后Nack() 会进入死信
   // 一个队列的expires必须相同
-  @RabbitSubscribe({
-    exchange: 'broadcast',
-    routingKey: 'office',
-    queue: 'office-queue',
-    queueOptions: {
-      messageTtl: 6000,
-      deadLetterExchange: 'dead.letter.livedata',
-      deadLetterRoutingKey: 'dead.letter.livedata.unformat',
-    },
-  })
-  public async officeHandler(payload: any) {
-    console.log(
-      `office --${new Date().toISOString()}--> ${JSON.stringify(payload)}`,
-    );
-  }
+  // @RabbitSubscribe({
+  //   exchange: 'broadcast',
+  //   routingKey: 'office',
+  //   queue: 'office-queue',
+  //   queueOptions: {
+  //     messageTtl: 6000,
+  //     deadLetterExchange: 'dead.letter.livedata',
+  //     deadLetterRoutingKey: 'dead.letter.livedata.unformat',
+  //   },
+  // })
+  // public async officeHandler(payload: any) {
+  //   console.log(
+  //     `office --${new Date().toISOString()}--> ${JSON.stringify(payload)}`,
+  //   );
+  // }
 
   // 订阅模式
   // 交换机模式为fanout 广播魔兽
@@ -280,39 +280,39 @@ export class AppService {
   // 被RabbitSubscribe修饰后routingKey会失效，因为是广播模式
   // 会争抢 dead.letter.livedata.unformat-queueA内的消息
   // 4条消息 Function A -> Function B -> Function A -> Function B
-  @RabbitSubscribe({
-    exchange: 'dead.letter.livedata',
-    routingKey: 'dead.letter.livedata.unformat',
-    queue: 'dead.letter.livedata.unformat-queueA',
-  })
-  public async deadLetterHandlerA(msg: any, ampqMsg: ConsumeMessage) {
-    console.log(
-      `! deadLetterHandler Received message: ${JSON.stringify(msg)} A`,
-    );
-    console.log(
-      `deadLetterHandlerA ---${new Date().toISOString()}---> ${
-        ampqMsg.fields
-      }, ${ampqMsg.properties}`,
-    );
-  }
+  // @RabbitSubscribe({
+  //   exchange: 'dead.letter.livedata',
+  //   routingKey: 'dead.letter.livedata.unformat',
+  //   queue: 'dead.letter.livedata.unformat-queueA',
+  // })
+  // public async deadLetterHandlerA(msg: any, ampqMsg: ConsumeMessage) {
+  //   console.log(
+  //     `! deadLetterHandler Received message: ${JSON.stringify(msg)} A`,
+  //   );
+  //   console.log(
+  //     `deadLetterHandlerA ---${new Date().toISOString()}---> ${
+  //       ampqMsg.fields
+  //     }, ${ampqMsg.properties}`,
+  //   );
+  // }
 
   // 交换机， routingKey, queue 完全相同的两个方法
   // 被RabbitSubscribe修饰后routingKey会失效，因为是广播模式
   // 会争抢 dead.letter.livedata.unformat-queueA内的消息
   // 4条消息 Function A -> Function B -> Function A -> Function B
-  @RabbitSubscribe({
-    exchange: 'dead.letter.livedata',
-    routingKey: 'dead.letter.livedata.unformat',
-    queue: 'dead.letter.livedata.unformat-queueA',
-  })
-  public async deadLetterHandlerB(msg: any, ampqMsg: ConsumeMessage) {
-    console.log(
-      `! deadLetterHandler Received message: ${JSON.stringify(msg)} B`,
-    );
-    console.log(
-      `deadLetterHandlerB ---${new Date().toISOString()}---> ${
-        ampqMsg.fields
-      }, ${ampqMsg.properties}`,
-    );
-  }
+  // @RabbitSubscribe({
+  //   exchange: 'dead.letter.livedata',
+  //   routingKey: 'dead.letter.livedata.unformat',
+  //   queue: 'dead.letter.livedata.unformat-queueA',
+  // })
+  // public async deadLetterHandlerB(msg: any, ampqMsg: ConsumeMessage) {
+  //   console.log(
+  //     `! deadLetterHandler Received message: ${JSON.stringify(msg)} B`,
+  //   );
+  //   console.log(
+  //     `deadLetterHandlerB ---${new Date().toISOString()}---> ${
+  //       ampqMsg.fields
+  //     }, ${ampqMsg.properties}`,
+  //   );
+  // }
 }
