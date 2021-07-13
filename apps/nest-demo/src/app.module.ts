@@ -30,14 +30,14 @@ import {
     CatsModule,
   ],
   controllers: [AppController],
-  // providers: [AppService],
-  providers: [
-    {
-      // 令牌用于请求同名类的实例。
-      provide: AppService,
-      useClass: AppService,
-    },
-  ],
+  providers: [AppService],
+  // providers: [
+  //   {
+  //     // 令牌用于请求同名类的实例。
+  //     provide: AppService,
+  //     useClass: AppService,
+  //   },
+  // ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

@@ -1,6 +1,6 @@
 import { ConfigService } from '@app/config';
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Message } from './message.event';
 
@@ -34,9 +34,19 @@ export class AppController {
     //   .catch(console.log);
 
     // 广播模式的交换机 broadcast/ 会发送到所有订阅参数包含该交换机的方法
-    this.amqpConnection.publish('broadcast', '', {
-      message: 'Mr.smith, please come in',
-    });
+    // this.amqpConnection.publish('broadcast', '', {
+    //   message: 'Mr.smith, please come in',
+    // });
+    this.appService.test();
+  }
+
+  @Get('formatMsg')
+  formatMsg(): void {
+    this.appService.formatMsg();
+  }
+  @Get('getMsg')
+  getMsg(): void {
+    this.appService.getMsg();
   }
 
   // @Get()

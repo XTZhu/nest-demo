@@ -1,5 +1,4 @@
-import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class NestServiceService {
@@ -8,16 +7,16 @@ export class NestServiceService {
     return `Hello ${name}`;
   }
 
-  @RabbitSubscribe({
-    exchange: 'exchange1',
-    routingKey: 'soha.pub',
-  })
-  public async pubSubHandler(msg: string): Promise<void> {
-    try {
-      console.log(`Received msg: ${JSON.stringify(msg)}`);
-      Logger.log(`Received msg: ${JSON.stringify(msg)}`);
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  // @RabbitSubscribe({
+  //   exchange: 'exchange1',
+  //   routingKey: 'soha.pub',
+  // })
+  // public async pubSubHandler(msg: string): Promise<void> {
+  //   try {
+  //     console.log(`Received msg: ${JSON.stringify(msg)}`);
+  //     Logger.log(`Received msg: ${JSON.stringify(msg)}`);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 }

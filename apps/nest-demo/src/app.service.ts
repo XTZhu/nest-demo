@@ -1,5 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Nack, RabbitRPC, RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
+import {
+  AmqpConnection,
+  Nack,
+  RabbitRPC,
+  RabbitSubscribe,
+} from '@golevelup/nestjs-rabbitmq';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
@@ -10,7 +15,86 @@ export class AppService {
   constructor(
     @Inject('Cat_Demo')
     private readonly serviceclient: ClientProxy,
-  ) {}
+    private readonly amqpConnection: AmqpConnection,
+  ) {
+    // this.amqpConnection.channel.prefetch(1, true);
+  }
+
+  async test() {
+    const queue = 'sg:unformat';
+    const msg = 'Hello world';
+    const a = await this.amqpConnection.channel.assertQueue(queue, {
+      durable: false,
+    });
+    console.log(a);
+    // this.amqpConnection.channel.sendToQueue(queue, Buffer.from(msg));
+    // console.log(' [x] Sent %s', msg);
+    let num = 0;
+    while (num < 1000) {
+      this.sendMsg('sg:unformat', num);
+      num++;
+    }
+  }
+
+  sendMsg(queue: string, num: number, isFormat?: boolean) {
+    this.amqpConnection.channel.sendToQueue(
+      queue,
+      Buffer.from(`hello world ${num} ${isFormat ? 'format' : Date.now()}`),
+    );
+  }
+
+  async formatMsg() {
+    await this.amqpConnection.channel.assertQueue('sg:unformat', {
+      durable: false,
+    });
+    this.amqpConnection.channel.consume('sg:unformat', async msg => {
+      console.log(msg.content.toString(), 'sg:unformat1');
+      await this.sleep(1000);
+      this.sendMsg('sg:format', 1, true);
+
+      this.amqpConnection.channel.ack(msg);
+    });
+    this.amqpConnection.channel.consume('sg:unformat', async msg => {
+      console.log(msg.content.toString(), 'sg:unformat2');
+      await this.sleep(1000);
+      this.sendMsg('sg:format', 0, true);
+
+      this.amqpConnection.channel.ack(msg);
+    });
+    this.amqpConnection.channel.consume('sg:unformat', async msg => {
+      console.log(msg.content.toString(), 'sg:unformat3');
+      await this.sleep(1000);
+      this.sendMsg('sg:format', 2, true);
+
+      this.amqpConnection.channel.ack(msg);
+    });
+  }
+
+  async getMsg() {
+    await this.amqpConnection.channel.assertQueue('sg:format', {
+      durable: false,
+    });
+
+    await this.amqpConnection.channel.consume(
+      'sg:format',
+      async msg => {
+        console.log(msg.content.toString(), 'sg:format');
+        // a += `${msg.content.toString()}_`;
+        await this.sleep(100);
+        this.amqpConnection.channel.ack(msg);
+      },
+      {},
+    );
+    // return a;
+  }
+  sleep(time: number): Promise<number> {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        console.log(Date.now());
+        resolve(1);
+      }, time);
+    });
+  }
 
   // getHello(name: string): Promise<string> {
   //   const pattern = { cmd: 'getHello' };
@@ -38,10 +122,7 @@ export class AppService {
     },
     // errorHandler: () => {},
   })
-  public async pubSubHandler(
-    payload: any,
-    amqpMsg: ConsumeMessage,
-  ): Promise<any> {
+  public async pubSubHandler(payload: any): Promise<any> {
     // console.log(
     //   `Received message: ${JSON.stringify(payload)} ${this.pattyCount}`,
     // );
@@ -178,7 +259,6 @@ export class AppService {
   //    3.保证这个队列不被消费
   //    4.设置他的messageTtl 为预定时间
   //    5.绑定到对应的死信队列
-  
 
   // @RabbitSubscribe({
   //   exchange: 'broadcast',

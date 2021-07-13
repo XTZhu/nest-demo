@@ -90,7 +90,7 @@ export class CatsController {
   }
 
   @Get('all_cat')
-	@UseInterceptors(TransformInterceptor)
+  @UseInterceptors(TransformInterceptor)
   findAllRxjs(): Observable<any[]> {
     return of(['a']);
   }
@@ -98,6 +98,11 @@ export class CatsController {
   @Get('all_cat')
   async findAllAsync(): Promise<any[]> {
     return [];
+  }
+
+  @Get('test')
+  async text(): Promise<any> {
+    // this.catsService.test();
   }
 
   // @Get('all_cat')
