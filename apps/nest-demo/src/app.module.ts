@@ -15,6 +15,7 @@ import {
   LoggerMiddleware,
   logger,
 } from './common/middleware/logger.middleware';
+import { DogsModule } from './dogs/dogs.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import {
       },
     ]),
     CatsModule,
+    DogsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
