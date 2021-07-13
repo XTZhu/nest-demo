@@ -108,10 +108,10 @@ export class AppService {
   // 交换机模式为fanout 广播魔兽
   // routingkey 在fanout模式下不起作痛
   // 和下面一个方法公用一个队列
-  // 返回一个new Nack()拒绝实例, 
+  // 返回一个new Nack()拒绝实例,
   // new Nack(true) 表示会requeue 重新回到队列
   // 给同一个队列下的officeHandler函数使用
-  // 在messageTtl，过期后， 然后Nack() 会进入死信 
+  // 在messageTtl，过期后， 然后Nack() 会进入死信
   // 一个队列的expires必须相同
   @RabbitSubscribe({
     exchange: 'broadcast',
@@ -130,10 +130,19 @@ export class AppService {
     return new Nack(true);
   }
 
+  // 订阅模式
+  // 交换机模式为fanout 广播魔兽
+  // routingkey 在fanout模式下不起作痛
+  // 和上面一个方法公用一个队列
+  // 返回一个new Nack()拒绝实例,
+  // 上面 new Nack(true) 表示会requeue 重新回到队列
+  // 未处理的消息officeHandler函数使用
+  // 在messageTtl，过期后， 然后Nack() 会进入死信
+  // 一个队列的expires必须相同
   @RabbitSubscribe({
     exchange: 'broadcast',
     routingKey: 'office',
-    queue: 'hall-queue',
+    queue: 'office-queue',
     queueOptions: {
       messageTtl: 6000,
       deadLetterExchange: 'dead.letter.livedata',
@@ -149,24 +158,43 @@ export class AppService {
   // 订阅模式
   // 交换机模式为fanout 广播魔兽
   // routingkey 在fanout模式下不起作痛
-  // 返回一个new Nack()拒绝实例, 
-  //  会立即进入死信 
-  @RabbitSubscribe({
-    exchange: 'broadcast',
-    routingKey: 'kitchen',
-    queue: 'kitchen-queue',
-    queueOptions: {
-      messageTtl: 6000,
-      deadLetterExchange: 'dead.letter.livedata',
-      deadLetterRoutingKey: 'dead.letter.livedata.unformat',
-    },
-  })
-  public async kitchenlHandler(payload: any) {
-    console.log(
-      `kitchen --${new Date().toISOString()}--> ${JSON.stringify(payload)}`,
-    );
-    return new Nack();
-  }
+  // 和上面一个方法公用一个队列
+  // 返回一个new Nack()拒绝实例,
+  // 上面 new Nack(true) 表示会requeue 重新回到队列
+  // 未处理的消息officeHandler函数使用
+  // 在messageTtl，过期后， 然后Nack() 会进入死信
+  // 一个队列的expires必须相同
+
+  // 交换机broadcast 绑定了三个队列
+  // office-queue
+  // hall-queue
+  // kitchen-queue
+
+  // kitchen-queue 没有被方法监听
+  //  那么他会直接进入绑定的死信交换机里的死信队列
+  //  新建延迟队列有几个要点
+  //    1.新建一个交换机
+  //    2.新建一个队列
+  //    3.保证这个队列不被消费
+  //    4.设置他的messageTtl 为预定时间
+  //    5.绑定到对应的死信队列
+  
+
+  // @RabbitSubscribe({
+  //   exchange: 'broadcast',
+  //   routingKey: 'kitchen',
+  //   queue: 'kitchen-queue',
+  //   queueOptions: {
+  //     messageTtl: 6000,
+  //     deadLetterExchange: 'dead.letter.livedata',
+  //     deadLetterRoutingKey: 'dead.letter.livedata.unformat',
+  //   },
+  // })
+  // public async kitchenlHandler(payload: any) {
+  //   console.log(
+  //     `kitchen --${new Date().toISOString()}--> ${JSON.stringify(payload)}`,
+  //   );
+  // }
 
   // 交换机， routingKey, queue 完全相同的两个方法
   // 被RabbitSubscribe修饰后routingKey会失效，因为是广播模式
